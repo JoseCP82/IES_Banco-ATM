@@ -1,0 +1,85 @@
+<div class="button clock" [style.opacity]="(this.stateS.state | async).status == 0 ? '1' : '0'">{{ time }}</div>
+<div class="button countdown" [style.opacity]="this.countdown > 0 ? '0.7' : '0'">
+  {{ countdown }}
+</div>
+
+<div class="centered">
+  <img class="logoBanca" src="assets/logoBanca.jpeg" />
+  <div
+    class="b_centered button"
+    (click)="startScanning()"
+    *ngIf="(this.stateS.state | async).status == 0"
+  >
+    Realizar una operación
+  </div>
+  <div #cameraDiv
+    class="camera"
+    [style.max-height]="
+      (this.stateS.state | async).status == 1 ? '600px' : '0px'
+    "
+  >
+    <video
+      #video
+      id="video"
+      autoplay
+      muted
+      [style.max-height]="
+        (this.stateS.state | async).status == 1 ? '600px' : '0px'
+      "
+    ></video>
+    <canvas
+      #canvas
+      id="canvas"
+      hidden
+      style="width: 100%"
+      [style.max-height]="
+        (this.stateS.state | async).status == 1 ? '600px' : '0px'
+      "
+    ></canvas>
+  </div>
+  <div class="info" *ngIf="(this.stateS.state | async).status == 1">
+    Acerque el código QR generado en la aplicación de su móvil a la cámara del
+    cajero.<br />
+    <img src="assets/reader.gif" width="50px" />
+  </div>
+  <div class="error" *ngIf="(this.stateS.state | async).status == 2">
+    {{ error }}<br />
+    <img src="assets/error.gif" width="50px" />
+  </div>
+  <div class="info" *ngIf="(this.stateS.state | async).status == 3">
+    Estamos comprobando su operación. En breve tendremos la respuesta.<br />
+    <img src="assets/server.gif" width="80px" />
+  </div>
+  <div class="info" *ngIf="(this.stateS.state | async).status == 4">
+    {{msg}}<br />
+    <img src="assets/ok.gif" width="100px" />
+  </div>
+  <div class="info" *ngIf="(this.stateS.state | async).status == 5">
+    {{msg}}<br />
+    <img src="assets/consumed.gif" width="100px" />
+  </div>
+  <div class="info" *ngIf="(this.stateS.state | async).status == 6">
+    {{msg}}<br />
+    <img src="assets/wrongLocation.gif" width="150px" />
+  </div>
+  <div
+    class="b_centered button"
+    (click)="home()"
+    *ngIf="(this.stateS.state | async).status == 2 || (this.stateS.state | async).status == 4"
+  >
+    Volver al inicio
+  </div>
+</div>
+
+<div
+  class="button bottom"
+  style="border: 1px solid red !important"
+  (click)="cancelScanning()"
+  *ngIf="(this.stateS.state | async).status == 1"
+>
+  Cancelar
+</div>
+
+<audio id="beep">
+  <source src="assets/beep.mp3" type="audio/mpeg" />
+</audio>
